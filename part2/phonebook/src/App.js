@@ -1,22 +1,20 @@
-import {Component, useState} from 'react'
+import {Component, useState, useEffect} from 'react'
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
-import person from "./components/Person";
+import axios from "axios";
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        {name: 'Yassine Bono', number: '040-123456', id: 1},
-        {name: 'Hakim Zyach', number: '39-44-5323523', id: 2},
-        {name: 'Achraf hakimi', number: '12-43-234345', id: 3},
-        {name: 'Walid regragui', number: '39-23-6423122', id: 4},
-        {name: 'Azzedine ounahi', number: '061-9307533', id: 5},
-        {name: 'Mohammed STITANE', number: '061-9307533', id: 6}
-    ])
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [newFilter, setNewFilter] = useState('')
 
+    useEffect(() => {
+        axios
+            .get('http://localhost:3001/persons')
+            .then(response => setPersons(response.data))
+    }, [])
     const addPerson = (event) => {
         event.preventDefault()
         const found = persons.filter(p => p.name === newName).length > 0;

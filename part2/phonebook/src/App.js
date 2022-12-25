@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 import personsService from "./services/persons";
 
 const App = () => {
@@ -9,6 +10,10 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [newFilter, setNewFilter] = useState('')
+    const [errorMessage, setErrorMessage] = useState({text: null, type: null})
+    const SUCCESS = 'SUCCESS';
+    const ERROR = 'ERROR';
+
 
     useEffect(() => {
         personsService
@@ -26,6 +31,7 @@ const App = () => {
             .create(newPerson)
             .then(returnedPerson => {
                 setPersons(persons.concat(returnedPerson))
+                fireMessage(`Added ${returnedPerson.name}`, SUCCESS)
             })
     }
 
@@ -36,6 +42,9 @@ const App = () => {
             .update(id, newPerson)
             .then(returnedPerson => {
                 setPersons(persons.map(p => p.id !== id ? p : returnedPerson))
+                fireMessage(`Updated ${returnedPerson.name}`, SUCCESS);
+            }).catch(error => {
+                fireMessage(`Information of ${newPerson.name} has already been removed`, ERROR)
             })
     }
 
@@ -56,6 +65,13 @@ const App = () => {
         setNewNumber('')
     }
 
+    function fireMessage(message, type) {
+        setErrorMessage({text: message, type: type})
+        setTimeout(() => {
+            setErrorMessage({text: null, type: null})
+        }, 5000)
+    }
+
     const deletePerson = (id) => {
         const person = persons.find(p => p.id === id);
         let ok = window.confirm(`Delete ${person.name} ?`);
@@ -63,13 +79,8 @@ const App = () => {
             .deletePerson(id)
             .then(response => {
                 setPersons(persons.filter(n => n.id !== id))
+                fireMessage(`Deleted ${person.name}`, SUCCESS);
             })
-        // .catch(error => {
-        //     alert(
-        //         `the note '${note.content}' was already deleted from server`
-        //     )
-        //     setNotes(notes.filter(n => n.id !== id))
-        // })
     }
 
     const handleNameChanged = (event) => setNewName(event.target.value)
@@ -80,6 +91,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={errorMessage}/>
             <Filter value={newFilter} onChange={handleFilterChanged}/>
             <PersonForm onSubmit={addPerson} nameValue={newName} onNameChange={handleNameChanged}
                         numberValue={newNumber} onNumberChange={handleNumberChanged}/>

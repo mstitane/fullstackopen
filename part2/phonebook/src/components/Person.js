@@ -1,7 +1,9 @@
 const Person = (props) => {
+    let person = props.person;
     return (
         <p>
-            {props.person.name} {props.person.number}
+            {person.name} {person.number}
+            <button onClick={() => props.onDelete(person.id)}>delete</button>
         </p>
     )
 }

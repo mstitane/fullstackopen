@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Yassine Bono",
-      "number": "040-123456",
+      "number": "123654",
       "id": 1
     },
     {
@@ -24,11 +24,6 @@
       "name": "Azzedine ounahi",
       "number": "061-9307533",
       "id": 5
-    },
-    {
-      "name": "Mohammed STITANE",
-      "number": "061-9307533",
-      "id": 6
     }
   ]
 }

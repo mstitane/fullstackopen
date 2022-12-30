@@ -33,6 +33,9 @@ const App = () => {
                 setPersons(persons.concat(returnedPerson))
                 fireMessage(`Added ${returnedPerson.name}`, SUCCESS)
             })
+            .catch(error => {
+                fireMessage(error.response.data.error, ERROR)
+            })
     }
 
     const updatePerson = (person, number) => {
@@ -43,8 +46,9 @@ const App = () => {
             .then(returnedPerson => {
                 setPersons(persons.map(p => p.id !== id ? p : returnedPerson))
                 fireMessage(`Updated ${returnedPerson.name}`, SUCCESS);
-            }).catch(error => {
-                fireMessage(`Information of ${newPerson.name} has already been removed`, ERROR)
+            })
+            .catch(error => {
+                fireMessage(error.response.data.error, ERROR)
             })
     }
 
